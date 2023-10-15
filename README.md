@@ -3,7 +3,7 @@ This is a Telegram Bot written in Python for mirroring files on the Internet to 
 
 # Features
 
-## By [AL-NOMAN](https://github.com/ZeynDev)
+## By [Zeyn89](https://github.com/ZeynDev)
 
 ### BOT_PM
 
