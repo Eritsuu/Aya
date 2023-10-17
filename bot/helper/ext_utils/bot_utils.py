@@ -114,13 +114,13 @@ def get_progress_bar_string(pct):
     pct = float(pct.strip('%'))
     p = min(max(pct, 0), 100)
     cFull = int(p // 10)
-    p_str = '●' * cFull
-    p_str += '○' * (10 - cFull)
+    p_str = '▬' * cFull
+    p_str += '▭' * (10 - cFull)
     return f"[{p_str}]"
 
 
 def get_readable_message():
-    msg = ""
+    msg = "⏳ ☞ 𝑻𝒖𝒈𝒂𝒔 𝒀𝒂𝒏𝒈 𝑩𝒆𝒓𝒋𝒂𝒍𝒂𝒏. . ."
     button = None
     STATUS_LIMIT = config_dict['STATUS_LIMIT']
     tasks = len(download_dict)
@@ -137,7 +137,7 @@ def get_readable_message():
             msg += f"<b><a href='{download.message.link}'>{download.status()}</a>: </b>"
             msg += f"<code>{escape(f'📚{download.name()}')}</code>"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
-            msg += f"\n🌀 {get_progress_bar_string(download.progress())} {download.progress()}"
+            msg += f"\n<b>🌀 : </b>{get_progress_bar_string(download.progress())} {download.progress()}"
             msg += f"\n<b>⚡ Speed: </b>{download.speed()}"
             msg += f"\n<b>✅ Done: </b>{download.processed_bytes()} of {download.size()}"
             msg += f"\n<b>⏳ ETA: </b>{download.eta()} <b>| ⌛ Elapsed: </b>{get_readable_time(time() - download.message.date.timestamp())}"
@@ -178,14 +178,14 @@ def get_readable_message():
         button = buttons.build_menu(2)
     else:
         buttons.ibutton("🔄 Refresh", "status ref")
-        buttons.ibutton("#⃣ Statistics", str(THREE))
+        buttons.ibutton("🎴 Statistics", str(THREE))
         buttons.ibutton(f"✔️ Channel", f"https://t.me/Ricloudw")
         buttons.ibutton("💢 Close", "status close")
         button = buttons.build_menu(2)
     if config_dict['BOT_MAX_TASKS']:
-        TASKS_COUNT = f"<b>Task Limit: </b>{config_dict['BOT_MAX_TASKS']} | <b>Run:</b> {tasks} | <b>Free:</b> {config_dict['BOT_MAX_TASKS'] - tasks}"
+        TASKS_COUNT = f"<b>Task Limit: </b>{config_dict['BOT_MAX_TASKS']} | <b>𝑻𝒂𝒔𝒌:</b> {tasks} | <b>𝑭𝒓𝒆𝒆:</b> {config_dict['BOT_MAX_TASKS'] - tasks}"
     else:
-        TASKS_COUNT = f"<b>Tasks Running:</b> {tasks}"
+        TASKS_COUNT = f"<b>𝑻𝒖𝒈𝒂𝒔 𝑩𝒆𝒓𝒋𝒂𝒍𝒂𝒏:</b> {tasks}"
     msg += f"________________________________"
     msg += f"\n{TASKS_COUNT}\n"
     msg += f"<b>CPU:</b> {cpu_percent()}% | <b>FREE:</b> {get_readable_file_size(disk_usage(config_dict['DOWNLOAD_DIR']).free)}"
