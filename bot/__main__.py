@@ -33,23 +33,26 @@ async def stats(client, message):
     total, used, free, disk = disk_usage('/')
     swap = swap_memory()
     memory = virtual_memory()
-    stats = f'<b>Commit Date:</b> {last_commit}\n\n'\
-            f'<b>Bot Uptime:</b> {get_readable_time(time() - botStartTime)}\n'\
-            f'<b>OS Uptime:</b> {get_readable_time(time() - boot_time())}\n\n'\
-            f'<b>Total Disk Space:</b> {get_readable_file_size(total)}\n'\
-            f'<b>Used:</b> {get_readable_file_size(used)} | <b>Free:</b> {get_readable_file_size(free)}\n\n'\
-            f'<b>Up:</b> {get_readable_file_size(net_io_counters().bytes_sent)} <b>|</b> '\
-            f'<b>Down:</b> {get_readable_file_size(net_io_counters().bytes_recv)}\n'\
-            f'<b>CPU:</b> {cpu_percent(interval=0.5)}% <b>|</b> '\
-            f'<b>RAM:</b> {memory.percent}% <b>| </b>'\
-            f'<b>DISK:</b> {disk}%\n'\
-            f'<b>Physical Cores:</b> {cpu_count(logical=False)} <b>|</b> '\
-            f'<b>Total Cores:</b> {cpu_count(logical=True)}\n\n'\
-            f'<b>SWAP:</b> {get_readable_file_size(swap.total)} | <b>Used:</b> {swap.percent}%\n'\
-            f'<b>Memory Total:</b> {get_readable_file_size(memory.total)}\n'\
-            f'<b>Memory Free:</b> {get_readable_file_size(memory.available)}\n'\
-            f'<b>Memory Used:</b> {get_readable_file_size(memory.used)}\n'
-    await sendMessage(message, stats)
+    stats = f'<b>💬 Commit Date:</b> {last_commit}\n\n'\
+            f'<b>🤖 Bot Uptime:</b> {get_readable_time(time() - botStartTime)}\n'\
+            f'<b>💨 OS Uptime:</b> {get_readable_time(time() - boot_time())}\n\n'\
+            f'<b>🔖 Total Disk Space:</b> {get_readable_file_size(total)}\n'\
+            f'<b>🫣 Used:</b> {get_readable_file_size(used)} | <b>🤔 Free:</b> {get_readable_file_size(free)}\n\n'\
+            f'<b>📤 Up:</b> {get_readable_file_size(net_io_counters().bytes_sent)} <b>|</b> '\
+            f'<b>📥 Down:</b> {get_readable_file_size(net_io_counters().bytes_recv)}\n'\
+            f'<b>💣 CPU:</b> {cpu_percent(interval=0.5)}% <b>|</b> '\
+            f'<b>💿 RAM:</b> {memory.percent}% <b>| </b>'\
+            f'<b>📀 DISK:</b> {disk}%\n'\
+            f'<b>🔩 Physical Cores:</b> {cpu_count(logical=False)} <b>|</b> '\
+            f'<b>🔩 Total Cores:</b> {cpu_count(logical=True)}\n\n'\
+            f'<b>🔗 SWAP:</b> {get_readable_file_size(swap.total)} | <b>Used:</b> {swap.percent}%\n'\
+            f'<b>🥡 Memory Total:</b> {get_readable_file_size(memory.total)}\n'\
+            f'<b>🥡 Memory Free:</b> {get_readable_file_size(memory.available)}\n'\
+            f'<b>🥡 Memory Used:</b> {get_readable_file_size(memory.used)}\n'
+            buttons = ButtonMaker()
+            buttons.ibutton("🎓 Owner", "t.me/Eritsuu") 
+            buttons.ibutton("👋 Donate", "https://link.dana.id/qr/3vbyw7nu") 
+    await sendMessage(message, stats, buttons=buttons.build_menu(3))
 
 
 async def start(client, message):
@@ -67,17 +70,18 @@ async def start(client, message):
         return await sendMessage(message, 'Token refreshed successfully!')
     else:
         buttons = ButtonMaker()
-        buttons.ubutton("Channel", "https://t.me/crimsonGo")
-        buttons.ubutton("Owner", "https://t.me/Eritsuu")
+        buttons.ubutton("🎉 Channel", "https://t.me/Ricloudw")
+        buttons.ubutton("🎓 Owner", "https://t.me/Eritsuu")
+        buttons.ubutton("👋 Donate", "https://link.dana.id/qr/3vbyw7nu") 
         reply_markup = buttons.build_menu(2)
-        start_string = f'''This bot can mirror all your links|files|torrents to Google Drive or any rclone cloud or to telegram.\nType /{BotCommands.HelpCommand} to get a list of available commands'''
+        start_string = f'''Bot ini dapat mencerminkan semua tautan|file|torrent Anda ke Google Drive atau rclone cloud atau ke telegram.\nType /{BotCommands.HelpCommand} untuk mendapatkan daftar perintah yang tersedia'''
         await sendMessage(message, start_string, reply_markup)
     await DbManger().update_pm_users(message.from_user.id)
     
 
 async def restart(_, message):
     await delete_all_messages()
-    restart_message = await sendMessage(message, "Restarting...")
+    restart_message = await sendMessage(message, "🎉Memulai Ulang...")
     if scheduler.running:
         scheduler.shutdown(wait=False)
     for interval in [QbInterval, Interval]:
@@ -96,24 +100,29 @@ async def ping(_, message):
     start_time = int(round(time() * 1000))
     reply = await sendMessage(message, "Starting Ping")
     end_time = int(round(time() * 1000))
-    await editMessage(reply, f'{end_time - start_time} ms')
+    await editMessage(reply, f'🏓Pong {end_time - start_time} ms')
 
 
 async def log(client, message):
-    logFileRead = open('log.txt', 'r')
-    logFileLines = logFileRead.read().splitlines()
-    ind = 1
-    Loglines = ''
-    try:
-        while len(Loglines) <= 2500:
-            Loglines = logFileLines[-ind]+'\n'+Loglines
-            if ind == len(logFileLines):
-                break
-            ind += 1
-        log_text = Loglines
-        await client.send_message(chat_id=message.chat.id, text=log_text, disable_web_page_preview=True)
-    except Exception as err:
-        LOGGER.error(f"Log Display: {err}")
+    buttons = ButtonMaker()
+    buttons.ibutton(('LOG_DISPLAY_BT'), f' {message.from_user.id} logdisplay')
+    buttons.ibutton(('WEB_PASTE_BT'), f' {message.from_user.id} webpaste')
+    await sendFile(message, 'log.txt', buttons=buttons.build_menu(1))
+    
+    ##logFileRead = open('log.txt', 'r')
+    ##logFileLines = logFileRead.read().splitlines()
+    ##ind = 1
+    ##Loglines = ''
+    ##try:
+        ##while len(Loglines) <= 2500:
+            ##Loglines = logFileLines[-ind]+'\n'+Loglines
+            ##if ind == len(logFileLines):
+                ##break
+            ##ind += 1
+        ##log_text = Loglines
+        ##await client.send_message(chat_id=message.chat.id, text=log_text, disable_web_page_preview=True)
+    ##except Exception as err:
+        ##LOGGER.error(f"Log Display: {err}")
 
 
 help_string = f'''
@@ -165,7 +174,7 @@ async def restart_notification():
 
     async def send_incompelete_task_message(cid, msg):
         try:
-            if msg.startswith('Restarted Successfully!'):
+            if msg.startswith('Berhasil Dimulai Ulang!'):
                 await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text=msg)
                 await aioremove(".restartmsg")
             else:
@@ -177,7 +186,7 @@ async def restart_notification():
     if INCOMPLETE_TASK_NOTIFIER and DATABASE_URL:
         if notifier_dict := await DbManger().get_incomplete_tasks():
             for cid, data in notifier_dict.items():
-                msg = 'Restarted Successfully!' if cid == chat_id else 'Bot Restarted!'
+                msg = 'Berhasil Dimulai Ulang!' if cid == chat_id else 'Bot Dimulai Ulang!'
                 for tag, links in data.items():
                     msg += f"\n\n{tag}: "
                     for index, link in enumerate(links, start=1):
