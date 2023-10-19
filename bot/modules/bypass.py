@@ -46,11 +46,11 @@ async def bypass_check(client, message):
     parse_data = []
     for result, link in zip(completed_tasks, tlinks):
         if isinstance(result, Exception):
-            bp_link = f"\n┖ <b>Bypass Gagal:</b> {result}"
+            bp_link = f"\n➥ <b>Bypass Gagal:</b> {result}"
         elif is_excep_link(link):
             bp_link = result
         else:
-            bp_link = f"\n┖ <b>Bypass Link:</b> {result}"
+            bp_link = f"\n➥ <b>Bypass Link:</b> {result}"
     
         if is_excep_link(link):
             parse_data.append(f"{bp_link}\n\n━━━━━━━✦Aya✦━━━━━━━\n\n")
@@ -60,7 +60,7 @@ async def bypass_check(client, message):
     end = time()
 
     if len(parse_data) != 0:
-        parse_data[-1] = parse_data[-1] + f"┎ <b>Total Links : {no}</b>\n┠ <b>Results In <code>{convert_time(end - start)}</code></b> !\n┖ <b>By </b>{message.from_user.mention} ( #ID{message.from_user.id} )"
+        parse_data[-1] = parse_data[-1] + f" ➥<b>Total Links : {no}</b>\n➥ <b>Results In <code>{convert_time(end - start)}</code></b> !\n➥ <b>By </b>{message.from_user.mention} ( #ID{message.from_user.id} )"
     tg_txt = "━━━━━━━✦Aya✦━━━━━━━\n\n"
     for tg_data in parse_data:
         tg_txt += tg_data
@@ -88,9 +88,9 @@ async def inline_query(client, query):
             end = time()
             
             if not is_excep_link(link):
-                bp_link = f"┎ <b>Source Link:</b> {link}\n┃\n┖ <b>Bypass Link:</b> {bp_link}"
+                bp_link = f"➥ <b>Source Link:</b> {link}\n\n <b>🎉 Hasil Bypass:</b> {bp_link}"
             answers.append(InlineQueryResultArticle(
-                title="✅️ Bypass Link Success !",
+                title="🎉 Bypass Link Berhasil !",
                 input_message_content=InputTextMessageContent(
                     f'{bp_link}\n\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n\n🧭 <b>Waktu <code>{get_readable_time(end - start)}</code></b>',
                     disable_web_page_preview=True,
@@ -107,7 +107,7 @@ async def inline_query(client, query):
             answers.append(InlineQueryResultArticle(
                 title="❌️ Bypass Link Error !",
                 input_message_content=InputTextMessageContent(
-                    f'┎ <b>Source Link:</b> {link}\n┃\n┖ {bp_link}\n\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n\n🧭 <b>Waktu <code>{get_readable_time(end - start)}</code></b>',
+                    f'➥ <b>Source Link:</b> {link}\n\n➥ {bp_link}\n\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n\n🧭 <b>Waktu <code>{get_readable_time(end - start)}</code></b>',
                     disable_web_page_preview=True,
                 ),
                 description=f"Bypass via !bp {link}",
@@ -129,7 +129,7 @@ async def inline_query(client, query):
                 description="Bypass via !bp [link]",
                 reply_markup=InlineKeyboardMarkup([
                         [InlineKeyboardButton("Channel", url="https://t.me/Ricloudw"),
-                        InlineKeyboardButton('Try Bypass', switch_inline_query_current_chat="!bp ")]
+                        InlineKeyboardButton('Coba Bypass Lagi', switch_inline_query_current_chat="!bp ")]
                 ])
             ))
     try:
