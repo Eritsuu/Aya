@@ -13,6 +13,7 @@ from bot.helper.ext_utils.bot_utils import get_readable_time
 from bot.core.exceptions import DDLException
 
 
+@Bypass.on_message(command(['bypass', 'bp']) 
 async def bypass_check(client, message):
     uid = message.from_user.id
     if (reply_to := message.reply_to_message) and (reply_to.text is not None or reply_to.caption is not None):
