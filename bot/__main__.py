@@ -49,10 +49,7 @@ async def stats(client, message):
             f'<b>🥡 Memory Total:</b> {get_readable_file_size(memory.total)}\n'\
             f'<b>🥡 Memory Free:</b> {get_readable_file_size(memory.available)}\n'\
             f'<b>🥡 Memory Used:</b> {get_readable_file_size(memory.used)}\n'
-            buttons = ButtonMaker()
-            buttons.ibutton("🎓 Owner", "t.me/Eritsuu") 
-            buttons.ibutton("👋 Donate", "https://link.dana.id/qr/3vbyw7nu") 
-    await sendMessage(message, stats, buttons=buttons.build_menu(3))
+    await sendMessage(message, stats, )
 
 
 async def start(client, message):
