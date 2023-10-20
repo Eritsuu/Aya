@@ -11,7 +11,7 @@ from pyrogram.handlers import MessageHandler
 from pyrogram.filters import command
 from asyncio import create_subprocess_exec, gather
 
-from bot import bot, botStartTime, LOGGER, Interval, DATABASE_URL, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler, user_data
+from bot import Bypass, bot, botStartTime, LOGGER, Interval, DATABASE_URL, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler, user_data
 from bot.helper.ext_utils.aya_utils import set_commands
 from .helper.ext_utils.fs_utils import start_cleanup, clean_all, exit_clean_up
 from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time, cmd_exec, sync_to_async
@@ -221,5 +221,9 @@ async def main():
     LOGGER.info("💥 Bot Started!")
     signal(SIGINT, exit_clean_up)
 
+Bypass.start()
+Bypass.loop.run_until_complete(restart())
 bot.loop.run_until_complete(main())
 bot.loop.run_forever()
+idle()
+Bypass.stop()
