@@ -7,7 +7,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQue
 from pyrogram.enums import MessageEntityType
 from pyrogram.errors import QueryIdInvalid
 
-from bot import Config, Bypass, BOT_START, LOGGER
+from bot import Bypass, BOT_START, LOGGER
 from bot.core.bypass_checker import direct_link_checker, is_excep_link
 from bot.helper.ext_utils.bot_utils import get_readable_time
 from bot.core.exceptions import DDLException
