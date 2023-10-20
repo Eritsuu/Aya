@@ -9,7 +9,7 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.ext_utils.bot_utils import sync_to_async, new_task, get_telegraph_list
-from bot.helper.ext_utils.atrocious_utils import send_to_chat
+from bot.helper.ext_utils.aya_utils import send_to_chat
 
 
 async def list_buttons(user_id, isRecursive=True, user_token=False):
