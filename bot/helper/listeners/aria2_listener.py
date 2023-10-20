@@ -8,7 +8,7 @@ from bot.helper.mirror_utils.status_utils.aria2_status import Aria2Status
 from bot.helper.ext_utils.fs_utils import clean_unwanted
 from bot.helper.ext_utils.bot_utils import getDownloadByGid, new_thread, bt_selection_buttons, sync_to_async
 from bot.helper.telegram_helper.message_utils import sendMessage, deleteMessage, update_all_messages
-from bot.helper.ext_utils.atrocious_utils import stop_duplicate_check, check_filename, limit_checker
+from bot.helper.ext_utils.aya_utils import stop_duplicate_check, check_filename, limit_checker
 
 
 @new_thread
