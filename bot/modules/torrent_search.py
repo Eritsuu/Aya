@@ -12,7 +12,7 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.ext_utils.bot_utils import get_readable_file_size, sync_to_async, new_task 
 from bot.helper.telegram_helper.button_build import ButtonMaker
-from bot.helper.ext_utils.atrocious_utils import delete_links, send_to_chat, task_utils
+from bot.helper.ext_utils.aya_utils import delete_links, send_to_chat, task_utils
 
 
 PLUGINS = []
