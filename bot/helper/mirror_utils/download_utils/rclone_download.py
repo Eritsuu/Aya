@@ -10,7 +10,7 @@ from bot.helper.ext_utils.task_manager import is_queued
 from bot.helper.mirror_utils.status_utils.rclone_status import RcloneStatus
 from bot.helper.mirror_utils.status_utils.queue_status import QueueStatus
 from bot.helper.mirror_utils.rclone_utils.transfer import RcloneTransferHelper
-from bot.helper.ext_utils.atrocious_utils import check_filename, stop_duplicate_check
+from bot.helper.ext_utils.aya_utils import check_filename, stop_duplicate_check
 
 
 async def add_rclone_download(rc_path, config_path, path, name, listener):
