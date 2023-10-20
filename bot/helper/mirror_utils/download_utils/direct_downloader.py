@@ -9,7 +9,7 @@ from bot.helper.listeners.direct_listener import DirectListener
 from bot.helper.mirror_utils.status_utils.direct_status import DirectStatus
 from bot.helper.mirror_utils.status_utils.queue_status import QueueStatus
 from bot.helper.telegram_helper.message_utils import sendMessage, sendStatusMessage
-from bot.helper.ext_utils.atrocious_utils import stop_duplicate_check
+from bot.helper.ext_utils.aya_utils import stop_duplicate_check
 
 
 async def add_direct_download(details, path, listener, foldername):
