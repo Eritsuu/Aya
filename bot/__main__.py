@@ -197,7 +197,7 @@ async def restart_notification():
 
     if await aiopath.isfile(".restartmsg"):
         try:
-            await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text='Restarted Successfully!')
+            await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text='🎉 Memulai Ulang Berhasil!')
         except:
             pass
         await aioremove(".restartmsg")
