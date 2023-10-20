@@ -155,7 +155,6 @@ NOTE: Try each command without any argument to see more detalis.
 /{BotCommands.ExecCommand}: Run Commands In Exec (Only Owner).
 /{BotCommands.ClearLocalsCommand}: Clear {BotCommands.EvalCommand} or {BotCommands.ExecCommand} locals (Only Owner).
 /{BotCommands.RssCommand}: RSS Menu.
-/{BotCommands.BypassCommand}: Bypass Link.
 '''
 
 
