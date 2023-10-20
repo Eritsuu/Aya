@@ -12,7 +12,7 @@ from pyrogram.filters import command
 from asyncio import create_subprocess_exec, gather
 
 from bot import bot, botStartTime, LOGGER, Interval, DATABASE_URL, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler, user_data
-from bot.helper.ext_utils.atrocious_utils import set_commands
+from bot.helper.ext_utils.aya_utils import set_commands
 from .helper.ext_utils.fs_utils import start_cleanup, clean_all, exit_clean_up
 from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time, cmd_exec, sync_to_async
 from .helper.ext_utils.db_handler import DbManger
