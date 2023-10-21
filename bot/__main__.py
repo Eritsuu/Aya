@@ -9,13 +9,9 @@ from time import time
 from sys import executable
 from pyrogram.handlers import MessageHandler
 from pyrogram.filters import command
-from asyncio import create_task, create_subprocess_exec, gather
-from re import match, search
+from asyncio import create_subprocess_exec, gather
+from re import match
 
-from threading import Thread
-from pyrogram.types import InlineKeyboardMarkup,InlineKeyboardButton
-import pyrogram
-from pyrogram import Client,filters
 
 from bot import bot, botStartTime, LOGGER, Interval, DATABASE_URL, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler, user_data
 from bot.helper.ext_utils.aya_utils import set_commands
@@ -29,8 +25,6 @@ from .helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.listeners.aria2_listener import start_aria2_listener
 from .modules import authorize, broadcast, clone, gd_count, gd_delete, cancel_mirror, gd_search, mirror_leech, photo_upload, status, torrent_search, torrent_select, ytdlp, rss, shell, eval, users_settings, bot_settings
 
-import bypasser
-import freewall
 
 async def stats(client, message):
     if await aiopath.exists('.git'):
@@ -205,119 +199,7 @@ async def restart_notification():
         except:
             pass
         await aioremove(".restartmsg")
-
-def handleIndex(ele,message,msg):
-    result = bypasser.scrapeIndex(ele)
-    try: bot.delete_messages(message.chat.id, msg.id)
-    except: pass
-    for page in result: app.send_message(message.chat.id, page, reply_to_message_id=message.id, disable_web_page_preview=True)
-
-
-def loopthread(message,otherss=False):
-
-    urls = []
-    if otherss: texts = message.caption
-    else: texts = message.text
-
-    if texts in [None,""]: return
-    for ele in texts.split():
-        if "http://" in ele or "https://" in ele:
-            urls.append(ele)
-    if len(urls) == 0: return
-
-    if bypasser.ispresent(bypasser.ddl.ddllist,urls[0]):
-        msg = bot.send_message(message.chat.id, "⚡ __generating...__", reply_to_message_id=message.id)
-    elif freewall.pass_paywall(urls[0], check=True):
-        msg = bot.send_message(message.chat.id, "🕴️ __jumping the wall...__", reply_to_message_id=message.id)
-    else:
-        if "https://olamovies" in urls[0] or "https://psa.wf/" in urls[0]:
-            msg = bot.send_message(message.chat.id, "⏳ __this might take some time...__", reply_to_message_id=message.id)
-        else:
-            msg = bot.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
-
-    strt = time()
-    links = ""
-    temp = None
-    for ele in urls:
-        if search(r"https?:\/\/(?:[\w.-]+)?\.\w+\/\d+:", ele):
-            handleIndex(ele,message,msg)
-            return
-        elif bypasser.ispresent(bypasser.ddl.ddllist,ele):
-            try: temp = bypasser.ddl.direct_link_generator(ele)
-            except Exception as e: temp = "**Error**: " + str(e)
-        elif freewall.pass_paywall(ele, check=True):
-            freefile = freewall.pass_paywall(ele)
-            if freefile:
-                try: 
-                    bot.send_document(message.chat.id, freefile, reply_to_message_id=message.id)
-                    remove(freefile)
-                    bot.delete_messages(message.chat.id,[msg.id])
-                    return
-                except: pass
-            else: bot.send_message(message.chat.id, "__Failed to Jump", reply_to_message_id=message.id)
-        else:    
-            try: temp = bypasser.shortners(ele)
-            except Exception as e: temp = "**Error**: " + str(e)
-        print("bypassed:",temp)
-        if temp != None: links = links + temp + "\n"
-    end = time()
-    print("Took " + "{:.2f}".format(end-strt) + "sec")
-
-    if otherss:
-        try:
-            bot.send_photo(message.chat.id, message.photo.file_id, f'__{links}__', reply_to_message_id=message.id)
-            bot.delete_messages(message.chat.id,[msg.id])
-            return
-        except: pass
-
-    try: 
-        final = []
-        tmp = ""
-        for ele in links.split("\n"):
-            tmp += ele + "\n"
-            if len(tmp) > 4000:
-                final.append(tmp)
-                tmp = ""
-        final.append(tmp)
-        bot.delete_messages(message.chat.id, msg.id)
-        tmsgid = message.id
-        for ele in final:
-            tmsg = app.send_message(message.chat.id, f'__{ele}__',reply_to_message_id=tmsgid, disable_web_page_preview=True)
-            tmsgid = tmsg.id
-    except Exception as e:
-        app.send_message(message.chat.id, f"__Failed to Bypass : {e}__", reply_to_message_id=message.id)
         
-# links
-@bot.on_message(filters.text)
-def receive(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    bypass = Thread(target=lambda:loopthread(message),daemon=True)
-    bypass.start()
-
-
-# doc thread
-def docthread(message):
-    msg = bot.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
-    print("sent DLC file")
-    file = bot.download_media(message)
-    dlccont = open(file,"r").read()
-    links = bypasser.getlinks(dlccont)
-    bot.edit_message_text(message.chat.id, msg.id, f'__{links}__', disable_web_page_preview=True)
-    remove(file)
-
-
-# files
-@bot.on_message([filters.document,filters.photo,filters.video])
-def docfile(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    
-    try:
-        if message.document.file_name.endswith("dlc"):
-            bypass = Thread(target=lambda:docthread(message),daemon=True)
-            bypass.start()
-            return
-    except: pass
-
-    bypass = Thread(target=lambda:loopthread(message,True),daemon=True)
-    bypass.start()
 
 async def main():
     await gather(start_cleanup(), torrent_search.initiate_search_tools(), restart_notification(), set_commands(bot))
