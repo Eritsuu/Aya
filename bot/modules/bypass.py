@@ -1,5 +1,5 @@
 from time import time
-from re import match
+from re import match, findall
 from asyncio import create_task, gather, sleep as asleep, create_subprocess_exec
 from pyrogram.filters import command, private, user
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
@@ -13,7 +13,7 @@ from bot.core.exceptions import DDLException
 
 
 # Handler for the "/bp" command
-@bot.on_message(filters.command("bp", "bypass", prefixes="/"))
+@bot.on_message(command(["bp", "bypass"]))
 async def bypass_check(client, message):
     uid = message.from_user.id
     if (reply_to := message.reply_to_message) and (reply_to.text is not None or reply_to.caption is not None):
@@ -80,3 +80,67 @@ async def bypass_check(client, message):
         await wait_msg.edit(tg_txt, disable_web_page_preview=True)
     else:
         await wait_msg.delete()
+
+@bot.on_inline_query()
+async def inline_query(client, query):
+    answers = [] 
+    string = query.query.lower()
+    if string.startswith("!bp "):
+        link = string.strip('!bp ')
+        start = time()
+        try:
+            bp_link = await direct_link_checker(link)
+            end = time()
+            
+            if not is_excep_link(link):
+                bp_link = f"┎ <b>Source Link:</b> {link}\n┃\n┖ <b>Bypass Link:</b> {bp_link}"
+            answers.append(InlineQueryResultArticle(
+                title="✅️ Bypass Link Success !",
+                input_message_content=InputTextMessageContent(
+                    f'{bp_link}\n\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n\n🧭 <b>Took Only <code>{convert_time(end - start)}</code></b>',
+                    disable_web_page_preview=True,
+                ),
+                description=f"Bypass via !bp {link}",
+                reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton('Bypass Again', switch_inline_query_current_chat="!bp ")]
+                ])
+            ))
+        except Exception as e:
+            bp_link = f"<b>Bypass Error:</b> {e}"
+            end = time()
+
+            answers.append(InlineQueryResultArticle(
+                title="❌️ Bypass Link Error !",
+                input_message_content=InputTextMessageContent(
+                    f'┎ <b>Source Link:</b> {link}\n┃\n┖ {bp_link}\n\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n\n🧭 <b>Took Only <code>{convert_time(end - start)}</code></b>',
+                    disable_web_page_preview=True,
+                ),
+                description=f"Bypass via !bp {link}",
+                reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton('Bypass Again', switch_inline_query_current_chat="!bp ")]
+                ])
+            ))    
+        
+    else:
+        answers.append(InlineQueryResultArticle(
+                title="♻️ Bypass Usage: In Line",
+                input_message_content=InputTextMessageContent(
+                    '''<b><i>FZ Bypass Bot!</i></b>
+    
+    <i>A Powerful Elegant Multi Threaded Bot written in Python... which can Bypass Various Shortener Links, Scrape links, and More ... </i>
+    
+🎛 <b>Inline Use :</b> !bp [Single Link]''',
+                ),
+                description="Bypass via !bp [link]",
+                reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton("FZ Channel", url="https://t.me/FXTorrentz"),
+                        InlineKeyboardButton('Try Bypass', switch_inline_query_current_chat="!bp ")]
+                ])
+            ))
+    try:
+        await query.answer(
+            results=answers,
+            cache_time=0
+        )
+    except QueryIdInvalid:
+        pass
