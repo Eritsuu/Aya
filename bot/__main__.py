@@ -22,6 +22,7 @@ from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.listeners.aria2_listener import start_aria2_listener
 from .modules import authorize, broadcast, clone, gd_count, gd_delete, cancel_mirror, gd_search, mirror_leech, photo_upload, status, torrent_search, torrent_select, ytdlp, rss, shell, eval, users_settings, bot_settings
+
 async def stats(client, message):
     if await aiopath.exists('.git'):
         last_commit = await cmd_exec("git log -1 --date=short --pretty=format:'%cd <b>\nFrom:</b> %cr'", True)
@@ -153,6 +154,7 @@ NOTE: Try each command without any argument to see more detalis.
 /{BotCommands.ExecCommand}: Run Commands In Exec (Only Owner).
 /{BotCommands.ClearLocalsCommand}: Clear {BotCommands.EvalCommand} or {BotCommands.ExecCommand} locals (Only Owner).
 /{BotCommands.RssCommand}: RSS Menu.
+/{BotCommands.BypassCommand}: Bypass Link.
 '''
 
 
