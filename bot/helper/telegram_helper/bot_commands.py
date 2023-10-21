@@ -37,6 +37,7 @@ class _BotCommands:
         self.BtSelectCommand = f'btsel{CMD_SUFFIX}'
         self.RssCommand = f'rss{CMD_SUFFIX}'
         self.BroadcastCommand = f'broadcast{CMD_SUFFIX}'
+        self.BypassCommand = f'bypass{CMD_SUFFIX}'
 
 
 BotCommands = _BotCommands()
