@@ -211,7 +211,7 @@ async def restart_notification():
 
 # Handler for the "/bp" command
 #@app.on_message(filters.command("bp", prefixes="/"))
-async def bypass_check(client, message):
+async def bypass_check(_, message):
     uid = message.from_user.id
     if (reply_to := message.reply_to_message) and (reply_to.text is not None or reply_to.caption is not None):
         txt = reply_to.text or reply_to.caption
