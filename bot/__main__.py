@@ -14,7 +14,8 @@ from re import match, search
 
 from threading import Thread
 from pyrogram.types import InlineKeyboardMarkup,InlineKeyboardButton
-from pyrogram import filters
+import pyrogram
+from pyrogram import Client,filters
 
 from bot import bot, botStartTime, LOGGER, Interval, DATABASE_URL, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler, user_data
 from bot.helper.ext_utils.aya_utils import set_commands
