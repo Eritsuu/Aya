@@ -278,6 +278,69 @@ async def bypass_check(_, message):
     else:
         await wait_msg.delete()
 
+@bot.on_inline_query()
+async def inline_query(client, query):
+    answers = [] 
+    string = query.query.lower()
+    if string.startswith("!bp "):
+        link = string.strip('!bp ')
+        start = time()
+        try:
+            bp_link = await direct_link_checker(link)
+            end = time()
+            
+            if not is_excep_link(link):
+                bp_link = f"┎ <b>Source Link:</b> {link}\n┃\n┖ <b>Bypass Link:</b> {bp_link}"
+            answers.append(InlineQueryResultArticle(
+                title="✅️ Bypass Link Success !",
+                input_message_content=InputTextMessageContent(
+                    f'{bp_link}\n\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n\n🧭 <b>Took Only <code>{convert_time(end - start)}</code></b>',
+                    disable_web_page_preview=True,
+                ),
+                description=f"Bypass via !bp {link}",
+                reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton('Bypass Again', switch_inline_query_current_chat="!bp ")]
+                ])
+            ))
+        except Exception as e:
+            bp_link = f"<b>Bypass Error:</b> {e}"
+            end = time()
+
+            answers.append(InlineQueryResultArticle(
+                title="❌️ Bypass Link Error !",
+                input_message_content=InputTextMessageContent(
+                    f'┎ <b>Source Link:</b> {link}\n┃\n┖ {bp_link}\n\n✎﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n\n🧭 <b>Took Only <code>{convert_time(end - start)}</code></b>',
+                    disable_web_page_preview=True,
+                ),
+                description=f"Bypass via !bp {link}",
+                reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton('Bypass Again', switch_inline_query_current_chat="!bp ")]
+                ])
+            ))    
+        
+    else:
+        answers.append(InlineQueryResultArticle(
+                title="♻️ Bypass Usage: In Line",
+                input_message_content=InputTextMessageContent(
+                    '''<b><i>FZ Bypass Bot!</i></b>
+    
+    <i>A Powerful Elegant Multi Threaded Bot written in Python... which can Bypass Various Shortener Links, Scrape links, and More ... </i>
+    
+🎛 <b>Inline Use :</b> !bp [Single Link]''',
+                ),
+                description="Bypass via !bp [link]",
+                reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton("FZ Channel", url="https://t.me/FXTorrentz"),
+                        InlineKeyboardButton('Try Bypass', switch_inline_query_current_chat="!bp ")]
+                ])
+            ))
+    try:
+        await query.answer(
+            results=answers,
+            cache_time=0
+        )
+    except QueryIdInvalid:
+        pass
 
 async def main():
     await gather(start_cleanup(), torrent_search.initiate_search_tools(), restart_notification(), set_commands(bot))
