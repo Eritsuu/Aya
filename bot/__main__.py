@@ -222,14 +222,14 @@ async def bypass(client, message):
         return
 
     if bypasser.ispresent(bypasser.ddl.ddllist,urls[0]):
-        msg = app.send_message(message.chat.id, "⚡ __generating...__", reply_to_message_id=message.id)
+        msg = sendMessage(message.chat.id, "⚡ __generating...__", reply_to_message_id=message.id)
     elif freewall.pass_paywall(urls[0], check=True):
-        msg = app.send_message(message.chat.id, "🕴️ __jumping the wall...__", reply_to_message_id=message.id)
+        msg = sendMessage(message.chat.id, "🕴️ __jumping the wall...__", reply_to_message_id=message.id)
     else:
         if "https://olamovies" in urls[0] or "https://psa.wf/" in urls[0]:
-            msg = app.send_message(message.chat.id, "⏳ __this might take some time...__", reply_to_message_id=message.id)
+            msg = sendMessage(message.chat.id, "⏳ __this might take some time...__", reply_to_message_id=message.id)
         else:
-            msg = app.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
+            msg = sendMessage(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
 
     strt = time()
     links = ""
@@ -248,14 +248,14 @@ async def bypass(client, message):
             freefile = freewall.pass_paywall(ele)
             if freefile:
                 try:
-                    await app.send_document(message.chat.id, freefile, reply_to_message_id=message.id)
+                    await sendDocument(message.chat.id, freefile, reply_to_message_id=message.id)
                     remove(freefile)
-                    await app.delete_messages(message.chat.id, [msg.id])
+                    await deleteMessages(message.chat.id, [msg.id])
                     return
                 except:
                     pass
             else:
-                await app.send_message(message.chat.id, "__Failed to Jump", reply_to_message_id=message.id)
+                await sendMessage(message.chat.id, "__Failed to Jump", reply_to_message_id=message.id)
         else:
             try:
                 temp = await bypasser.shorteners_async(ele)
@@ -270,8 +270,8 @@ async def bypass(client, message):
 
     if otherss:
         try:
-            await app.send_photo(message.chat.id, message.photo.file_id, f'__{links}__', reply_to_message_id=message.id)
-            await app.delete_messages(message.chat.id, [msg.id])
+            await sendPhoto(message.chat.id, message.photo.file_id, f'__{links}__', reply_to_message_id=message.id)
+            await deleteMessages(message.chat.id, [msg.id])
             return
         except:
             pass
@@ -285,20 +285,20 @@ async def bypass(client, message):
                 final.append(tmp)
                 tmp = ""
         final.append(tmp)
-        await app.delete_messages(message.chat.id, msg.id)
+        await deleteMessages(message.chat.id, msg.id)
         tmsgid = message.id
         for ele in final:
-            tmsg = await app.send_message(message.chat.id, f'__{ele}__', reply_to_message_id=tmsgid, disable_web_page_preview=True)
+            tmsg = await sendMessage(message.chat.id, f'__{ele}__', reply_to_message_id=tmsgid, disable_web_page_preview=True)
             tmsgid = tmsg.id
     except Exception as e:
-        await app.send_message(message.chat.id, f"__Failed to Bypass : {e}", reply_to_message_id=message.id)
+        await sendMessage(message.chat.id, f"__Failed to Bypass : {e}", reply_to_message_id=message.id)
 
 # Handler for text messages
 #@app.on_message(filters.text)
 async def receive_text(client, message):
     # Put your text message handling logic here
     # For example:
-    await app.send_message(message.chat.id, "Received a text message")
+    await sendMessage(message.chat.id, "Received a text message")
 
 # Handler for document files
 #@app.on_message([filters.document, filters.photo, filters.video])
@@ -311,12 +311,12 @@ async def docfile(client, message):
 
 # Define an async operation function
 async def docthread(message):
-    msg = await app.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
+    msg = await sendMessage(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
     print("sent DLC file")
-    file = await app.download_media(message)
+    file = await downloadMedia(message)
     dlccont = open(file, "r").read()
     links = bypasser.getlinks(dlccont)
-    await app.edit_message_text(message.chat.id, msg.message_id, f'__{links}__', disable_web_page_preview=True)
+    await edit_message_text(message.chat.id, msg.message_id, f'__{links}__', disable_web_page_preview=True)
     remove(file)
 
 
