@@ -295,8 +295,6 @@ async def main():
         BotCommands.HelpCommand) & CustomFilters.authorized))
     bot.add_handler(MessageHandler(stats, filters=command(
         BotCommands.StatsCommand) & CustomFilters.authorized))
-    bot.add_handler(MessageHandler(bypass, filters=command(
-        BotCommands.BypassCommand) & CustomFilters.authorized))
     LOGGER.info("💥 Bot Started!")
     signal(SIGINT, exit_clean_up)
 
