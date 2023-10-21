@@ -152,6 +152,7 @@ NOTE: Try each command without any argument to see more detalis.
 /{BotCommands.ExecCommand}: Run Commands In Exec (Only Owner).
 /{BotCommands.ClearLocalsCommand}: Clear {BotCommands.EvalCommand} or {BotCommands.ExecCommand} locals (Only Owner).
 /{BotCommands.RssCommand}: RSS Menu.
+/{BotCommands.BypassCommand}: Bypass Link.
 '''
 
 
@@ -323,7 +324,7 @@ async def main():
     bot.add_handler(MessageHandler(stats, filters=command(
         BotCommands.StatsCommand) & CustomFilters.authorized))
     bot.add_handler(MessageHandler(bypass, filters=command(
-        BotCommand.BypassCommand) & CustomFilters.authorized))
+        BotCommands.BypassCommand) & CustomFilters.authorized))
     LOGGER.info("💥 Bot Started!")
     signal(SIGINT, exit_clean_up)
 
