@@ -159,7 +159,6 @@ NOTE: Try each command without any argument to see more detalis.
 /{BotCommands.ExecCommand}: Run Commands In Exec (Only Owner).
 /{BotCommands.ClearLocalsCommand}: Clear {BotCommands.EvalCommand} or {BotCommands.ExecCommand} locals (Only Owner).
 /{BotCommands.RssCommand}: RSS Menu.
-/{BotCommands.BypassCommand}: Bypass Link.
 '''
 
 
@@ -208,7 +207,7 @@ async def restart_notification():
 
 def handleIndex(ele,message,msg):
     result = bypasser.scrapeIndex(ele)
-    try: app.delete_messages(message.chat.id, msg.id)
+    try: bot.delete_messages(message.chat.id, msg.id)
     except: pass
     for page in result: app.send_message(message.chat.id, page, reply_to_message_id=message.id, disable_web_page_preview=True)
 
@@ -226,14 +225,14 @@ def loopthread(message,otherss=False):
     if len(urls) == 0: return
 
     if bypasser.ispresent(bypasser.ddl.ddllist,urls[0]):
-        msg = app.send_message(message.chat.id, "⚡ __generating...__", reply_to_message_id=message.id)
+        msg = bot.send_message(message.chat.id, "⚡ __generating...__", reply_to_message_id=message.id)
     elif freewall.pass_paywall(urls[0], check=True):
-        msg = app.send_message(message.chat.id, "🕴️ __jumping the wall...__", reply_to_message_id=message.id)
+        msg = bot.send_message(message.chat.id, "🕴️ __jumping the wall...__", reply_to_message_id=message.id)
     else:
         if "https://olamovies" in urls[0] or "https://psa.wf/" in urls[0]:
-            msg = app.send_message(message.chat.id, "⏳ __this might take some time...__", reply_to_message_id=message.id)
+            msg = bot.send_message(message.chat.id, "⏳ __this might take some time...__", reply_to_message_id=message.id)
         else:
-            msg = app.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
+            msg = bot.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
 
     strt = time()
     links = ""
@@ -249,12 +248,12 @@ def loopthread(message,otherss=False):
             freefile = freewall.pass_paywall(ele)
             if freefile:
                 try: 
-                    app.send_document(message.chat.id, freefile, reply_to_message_id=message.id)
+                    bot.send_document(message.chat.id, freefile, reply_to_message_id=message.id)
                     remove(freefile)
-                    app.delete_messages(message.chat.id,[msg.id])
+                    bot.delete_messages(message.chat.id,[msg.id])
                     return
                 except: pass
-            else: app.send_message(message.chat.id, "__Failed to Jump", reply_to_message_id=message.id)
+            else: bot.send_message(message.chat.id, "__Failed to Jump", reply_to_message_id=message.id)
         else:    
             try: temp = bypasser.shortners(ele)
             except Exception as e: temp = "**Error**: " + str(e)
@@ -265,8 +264,8 @@ def loopthread(message,otherss=False):
 
     if otherss:
         try:
-            app.send_photo(message.chat.id, message.photo.file_id, f'__{links}__', reply_to_message_id=message.id)
-            app.delete_messages(message.chat.id,[msg.id])
+            bot.send_photo(message.chat.id, message.photo.file_id, f'__{links}__', reply_to_message_id=message.id)
+            bot.delete_messages(message.chat.id,[msg.id])
             return
         except: pass
 
@@ -279,7 +278,7 @@ def loopthread(message,otherss=False):
                 final.append(tmp)
                 tmp = ""
         final.append(tmp)
-        app.delete_messages(message.chat.id, msg.id)
+        bot.delete_messages(message.chat.id, msg.id)
         tmsgid = message.id
         for ele in final:
             tmsg = app.send_message(message.chat.id, f'__{ele}__',reply_to_message_id=tmsgid, disable_web_page_preview=True)
@@ -288,7 +287,7 @@ def loopthread(message,otherss=False):
         app.send_message(message.chat.id, f"__Failed to Bypass : {e}__", reply_to_message_id=message.id)
         
 # links
-@app.on_message(filters.text)
+@bot.on_message(filters.text)
 def receive(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     bypass = Thread(target=lambda:loopthread(message),daemon=True)
     bypass.start()
@@ -296,17 +295,17 @@ def receive(client: pyrogram.client.Client, message: pyrogram.types.messages_and
 
 # doc thread
 def docthread(message):
-    msg = app.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
+    msg = bot.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
     print("sent DLC file")
-    file = app.download_media(message)
+    file = bot.download_media(message)
     dlccont = open(file,"r").read()
     links = bypasser.getlinks(dlccont)
-    app.edit_message_text(message.chat.id, msg.id, f'__{links}__', disable_web_page_preview=True)
+    bot.edit_message_text(message.chat.id, msg.id, f'__{links}__', disable_web_page_preview=True)
     remove(file)
 
 
 # files
-@app.on_message([filters.document,filters.photo,filters.video])
+@bot.on_message([filters.document,filters.photo,filters.video])
 def docfile(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     
     try:
@@ -340,4 +339,3 @@ async def main():
 
 bot.loop.run_until_complete(main())
 bot.loop.run_forever()
-app.run()
