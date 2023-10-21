@@ -10,6 +10,11 @@ from sys import executable
 from pyrogram.handlers import MessageHandler
 from pyrogram.filters import command
 from asyncio import create_subprocess_exec, gather
+from re import match
+
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
+from pyrogram.enums import MessageEntityType
+from pyrogram.errors import QueryIdInvalid
 
 from bot import bot, botStartTime, LOGGER, Interval, DATABASE_URL, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler, user_data
 from bot.helper.ext_utils.aya_utils import set_commands
@@ -22,7 +27,10 @@ from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.listeners.aria2_listener import start_aria2_listener
 from .modules import authorize, broadcast, clone, gd_count, gd_delete, cancel_mirror, gd_search, mirror_leech, photo_upload, status, torrent_search, torrent_select, ytdlp, rss, shell, eval, users_settings, bot_settings
-from bot.core import bypasser, freewall
+from bot.core.bypass_checker import direct_link_checker, is_excep_link
+from bot.core.bot_utils import chat_and_topics, convert_time
+from bot.core.exceptions import DDLException
+
 
 async def stats(client, message):
     if await aiopath.exists('.git'):
