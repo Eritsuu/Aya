@@ -13,7 +13,7 @@ from time import time
 
 
 # Handler for the "/bp" command
-@app.on_message(filters.command("bp", prefixes="/"))
+#@app.on_message(filters.command("bp", prefixes="/"))
 async def bypass_command(client, message):
     urls = []
     if message.caption:
@@ -116,3 +116,6 @@ async def docthread(message):
     links = bypasser.getlinks(dlccont)
     await app.edit_message_text(message.chat.id, msg.message_id, f'__{links}__', disable_web_page_preview=True)
     remove(file)
+
+bot.add_handler(MessageHandler(bypass, filters=command(
+    BotCommands.BypassCommand) & CustomFilters.authorized))
