@@ -9,7 +9,7 @@ from time import time
 from sys import executable
 from pyrogram.handlers import MessageHandler
 from pyrogram.filters import command
-from asyncio import create_subprocess_exec, gather
+from asyncio import create_task, create_subprocess_exec, gather
 from re import match
 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
