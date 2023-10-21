@@ -99,11 +99,8 @@ async def ping(_, message):
     await editMessage(reply, f'🏓Pong {end_time - start_time} ms')
 
 
-async def log(client, message):
-    buttons = ButtonMaker()
-    buttons.ibutton(('LOG_DISPLAY_BT'), f' {message.from_user.id} logdisplay')
-    buttons.ibutton(('WEB_PASTE_BT'), f' {message.from_user.id} webpaste')
-    await sendFile(message, 'log.txt', buttons=buttons.build_menu(1))
+async def log(_, message):
+    await sendFile(message, 'log.txt')
     
     ##logFileRead = open('log.txt', 'r')
     ##logFileLines = logFileRead.read().splitlines()
