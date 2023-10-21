@@ -210,7 +210,7 @@ async def restart_notification():
 
 
 ##Handler for the "/bp" command
-@bot.on_message(command("bp", "bypass", prefixes="/"))
+@bot.on_message(command(["bp", "bypass"]))
 async def bypass_check(_, message):
     uid = message.from_user.id
     if (reply_to := message.reply_to_message) and (reply_to.text is not None or reply_to.caption is not None):
