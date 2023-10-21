@@ -82,5 +82,5 @@ async def bypass(client, message):
     else:
         await wait_msg.delete()
 
-bot.add_handler(MessageHandler(bypass, filters=command(
+bot.add_handler(MessageHandler(Bypass, filters=command(
     BotCommands.BypassCommand) & CustomFilters.authorized))
