@@ -6,7 +6,6 @@ from threading import Thread
 from json import load
 from re import search
 
-from texts import HELP_TEXT
 from bot.core import bypasser
 from bot.core import freewall
 from time import time
