@@ -8,6 +8,7 @@ from time import sleep, time
 from asyncio import sleep as asleep
 from urllib.parse import parse_qs, quote, unquote, urlparse
 from uuid import uuid4
+from curl_cffi import requests as Nreq
 
 from bs4 import BeautifulSoup
 from cloudscraper import create_scraper
