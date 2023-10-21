@@ -14,7 +14,7 @@ from requests import get, session
 from json import load
 from os import environ
 
-with open('config.env', 'r') as f: DATA = load(f)
+with open('config.json', 'r') as f: DATA = load(f)
 def getenv(var): return environ.get(var) or DATA.get(var, None)
 
 
