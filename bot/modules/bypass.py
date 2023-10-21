@@ -13,7 +13,7 @@ from bot.core.exceptions import DDLException
 
 
 # Handler for the "/bp" command
-#@app.on_message(filters.command("bp", prefixes="/"))
+@bypass_message(filters.command("bp", "bypass", prefixes="/"))
 async def bypass(self, message):
     uasync def bypass_check(client, message):
     uid = message.from_user.id
@@ -81,6 +81,3 @@ async def bypass(self, message):
         await wait_msg.edit(tg_txt, disable_web_page_preview=True)
     else:
         await wait_msg.delete()
-
-bot.add_handler(MessageHandler(bypass, filters=command(
-    BotCommands.BypassCommand) & CustomFilters.authorized))
