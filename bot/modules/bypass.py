@@ -11,7 +11,7 @@ from time import time
 
 # Handler for the "/bp" command
 #@app.on_message(filters.command("bp", prefixes="/"))
-async def bypass_command(client, message):
+async def bypass(client, message):
     urls = []
     if message.caption:
         texts = message.caption
