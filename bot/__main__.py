@@ -281,14 +281,14 @@ async def bypass(client, message):
         await app.send_message(message.chat.id, f"__Failed to Bypass : {e}", reply_to_message_id=message.id)
 
 # Handler for text messages
-@app.on_message(filters.text)
+#@app.on_message(filters.text)
 async def receive_text(client, message):
     # Put your text message handling logic here
     # For example:
     await app.send_message(message.chat.id, "Received a text message")
 
 # Handler for document files
-@app.on_message([filters.document, filters.photo, filters.video])
+#@app.on_message([filters.document, filters.photo, filters.video])
 async def docfile(client, message):
     try:
         if message.document.file_name.endswith("dlc"):
