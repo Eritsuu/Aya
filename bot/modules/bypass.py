@@ -1,118 +1,86 @@
-import pyrogram
-from pyrogram import Client,filters
-from pyrogram.types import InlineKeyboardMarkup,InlineKeyboardButton
-from os import environ, remove
-from re import search
-
-from bot.core import bypasser
-from bot.core import freewall
 from time import time
+from re import match
+from asyncio import create_task, gather, sleep as asleep, create_subprocess_exec
+from pyrogram.filters import command, private, user
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
+from pyrogram.enums import MessageEntityType
+from pyrogram.errors import QueryIdInvalid
+
+from bot import Bypass, BOT_START, LOGGER
+from bot.core.bypass_checker import direct_link_checker, is_excep_link
+from bot.core.bot_utils import convert_time
+from bot.core.exceptions import DDLException
 
 
 # Handler for the "/bp" command
 #@app.on_message(filters.command("bp", prefixes="/"))
 async def bypass(client, message):
-    urls = []
-    if message.caption:
-        texts = message.caption
+    uasync def bypass_check(client, message):
+    uid = message.from_user.id
+    if (reply_to := message.reply_to_message) and (reply_to.text is not None or reply_to.caption is not None):
+        txt = reply_to.text or reply_to.caption
+        entities = reply_to.entities or reply_to.caption_entities
+    elif len(message.command) > 1:
+        txt = message.text
+        entities = message.entities
     else:
-        texts = message.text
+        return await message.reply('<i>No Link Provided!</i>')
+    
+    wait_msg = await message.reply("<i>Bypassing...</i>")
+    start = time()
 
-    if not texts or texts.strip() == "":
-        return
+    link, tlinks, no = '', [], 0
+    atasks = []
+    for enty in entities:
+        if enty.type == MessageEntityType.URL:
+            link = txt[enty.offset:(enty.offset+enty.length)]
+        elif enty.type == MessageEntityType.TEXT_LINK:
+            link = enty.url
+            
+        if link:
+            no += 1
+            tlinks.append(link)
+            atasks.append(create_task(direct_link_checker(link)))
+            link = ''
 
-    for ele in texts.split():
-        if "http://" in ele or "https://" in ele:
-            urls.append(ele)
-
-    if len(urls) == 0:
-        return
-
-    msg = None
-
-    for ele in urls:
-        if search(r"https?:\/\/(?:[\w.-]+)?\.\w+\/\d+:", ele):
-            handleIndex(ele, message, msg)
-            return
-        elif bypasser.ispresent(bypasser.ddl.ddllist, ele):
-            try:
-                temp = await bypasser.ddl.direct_link_generator_async(ele)
-            except Exception as e:
-                temp = "**Error**: " + str(e)
-        elif freewall.pass_paywall(ele, check=True):
-            freefile = freewall.pass_paywall(ele)
-            if freefile:
-                try:
-                    await app.send_document(message.chat.id, freefile, reply_to_message_id=message.id)
-                    remove(freefile)
-                    await app.delete_messages(message.chat.id, [msg.id])
-                    return
-                except:
-                    pass
-            else:
-                await app.send_message(message.chat.id, "__Failed to Jump", reply_to_message_id=message.id)
+    completed_tasks = await gather(*atasks, return_exceptions=True)
+    
+    parse_data = []
+    for result, link in zip(completed_tasks, tlinks):
+        if isinstance(result, Exception):
+            bp_link = f"\n➢ <b>Bypass Error:</b> {result}"
+        elif is_excep_link(link):
+            bp_link = result
+        elif isinstance(result, list):
+            bp_link, ui = "", "➢"
+            for ind, lplink in reversed(list(enumerate(result, start=1))):
+                bp_link = f"\n{ui} <b>{ind}x Bypass Link:</b> {lplink}" + bp_link
+                ui = "➢"
         else:
-            try:
-                temp = await bypasser.shorteners_async(ele)
-            except Exception as e:
-                temp = "**Error**: " + str(e)
-        print("bypassed:", temp)
-        if temp is not None:
-            links = links + temp + "\n"
-
+            bp_link = f"\n➢ <b>Bypass Link:</b> {result}"
+    
+        if is_excep_link(link):
+            parse_data.append(f"{bp_link}\n\n━━━━━━━✦Aya✦━━━━━━━\n\n")
+        else:
+            parse_data.append(f'➣ <b>Source Link:</b> {link}{bp_link}\n\n━━━━━━━✦Aya✦━━━━━━━\n\n')
+            
     end = time()
-    print("Took " + "{:.2f}".format(end - strt) + "sec")
 
-    if otherss:
-        try:
-            await app.send_photo(message.chat.id, message.photo.file_id, f'__{links}__', reply_to_message_id=message.id)
-            await app.delete_messages(message.chat.id, [msg.id])
-            return
-        except:
-            pass
-
-    try:
-        final = []
-        tmp = ""
-        for ele in links.split("\n"):
-            tmp += ele + "\n"
-            if len(tmp) > 4000:
-                final.append(tmp)
-                tmp = ""
-        final.append(tmp)
-        await app.delete_messages(message.chat.id, msg.id)
-        tmsgid = message.id
-        for ele in final:
-            tmsg = await app.send_message(message.chat.id, f'__{ele}__', reply_to_message_id=tmsgid, disable_web_page_preview=True)
-            tmsgid = tmsg.id
-    except Exception as e:
-        await app.send_message(message.chat.id, f"__Failed to Bypass : {e}", reply_to_message_id=message.id)
-
-# Handler for text messages
-@app.on_message(filters.text)
-async def receive_text(client, message):
-    # Put your text message handling logic here
-    # For example:
-    await app.send_message(message.chat.id, "Received a text message")
-
-# Handler for document files
-@app.on_message([filters.document, filters.photo, filters.video])
-async def docfile(client, message):
-    try:
-        if message.document.file_name.endswith("dlc"):
-            await docthread(message)
-    except:
-        pass
-
-# Define an async operation function
-async def docthread(message):
-    msg = await app.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
-    print("sent DLC file")
-    file = await app.download_media(message)
-    dlccont = open(file, "r").read()
-    links = bypasser.getlinks(dlccont)
-    await app.edit_message_text(message.chat.id, msg.message_id, f'__{links}__', disable_web_page_preview=True)
-    remove(file)
+    if len(parse_data) != 0:
+        parse_data[-1] = parse_data[-1] + f"➢ <b>Total Links : {no}</b>\n➢ <b>Results In <code>{convert_time(end - start)}</code></b> !\n➢ <b>By </b>{message.from_user.mention} ( #ID{message.from_user.id} )"
+    tg_txt = "━━━━━━━✦Aya✦━━━━━━━\n\n"
+    for tg_data in parse_data:
+        tg_txt += tg_data
+        if len(tg_txt) > 4000:
+            await wait_msg.edit(tg_txt, disable_web_page_preview=True)
+            wait_msg = await message.reply("<i>Fetching...</i>", reply_to_message_id=wait_msg.id)
+            tg_txt = ""
+            await asleep(2.5)
+    
+    if tg_txt != "":
+        await wait_msg.edit(tg_txt, disable_web_page_preview=True)
+    else:
+        await wait_msg.delete()
 
 bot.add_handler(MessageHandler(bypass, filters=command(
     BotCommands.BypassCommand) & CustomFilters.authorized))
