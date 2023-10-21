@@ -10,7 +10,7 @@ from lxml import etree
 import hashlib
 import json
 from asyncio import sleep as asleep
-import ddl
+from bot.core import ddl
 from cfscrape import create_scraper
 from json import load
 from os import environ
