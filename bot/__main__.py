@@ -279,7 +279,7 @@ async def bypass_check(_, message):
         await wait_msg.delete()
 
 @bot.on_inline_query()
-async def inline_query(client, query):
+async def inline_query(_, query):
     answers = [] 
     string = query.query.lower()
     if string.startswith("!bp "):
