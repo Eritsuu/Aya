@@ -13,7 +13,7 @@ from bot.core.exceptions import DDLException
 
 
 # Handler for the "/bp" command
-@bypass_message(filters.command("bp", "bypass", prefixes="/"))
+@bot.on_message(filters.command("bp", "bypass", prefixes="/"))
 async def bypass_check(client, message):
     uid = message.from_user.id
     if (reply_to := message.reply_to_message) and (reply_to.text is not None or reply_to.caption is not None):
