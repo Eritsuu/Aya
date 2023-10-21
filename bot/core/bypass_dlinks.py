@@ -15,7 +15,7 @@ from lxml import etree
 from requests import Session
 from aiohttp import ClientSession 
 
-from bot import LOGGER, Config
+from bot import LOGGER
 from bot.core.bot_utils import get_dl
 from bot.core.exceptions import DDLException
 
