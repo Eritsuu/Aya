@@ -2,7 +2,7 @@ import requests
 import base64
 import re
 from bs4 import BeautifulSoup
-from .core import RecaptchaV3
+from bot.core import RecaptchaV3
 
 RTOKEN = RecaptchaV3()
 
