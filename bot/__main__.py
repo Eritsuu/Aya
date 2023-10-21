@@ -11,7 +11,10 @@ from pyrogram.handlers import MessageHandler
 from pyrogram.filters import command
 from asyncio import create_task, create_subprocess_exec, gather
 from re import match, search
+
 from threading import Thread
+from pyrogram.types import InlineKeyboardMarkup,InlineKeyboardButton
+from pyrogram import filters
 
 from bot import bot, botStartTime, LOGGER, Interval, DATABASE_URL, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler, user_data
 from bot.helper.ext_utils.aya_utils import set_commands
@@ -25,6 +28,8 @@ from .helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.listeners.aria2_listener import start_aria2_listener
 from .modules import authorize, broadcast, clone, gd_count, gd_delete, cancel_mirror, gd_search, mirror_leech, photo_upload, status, torrent_search, torrent_select, ytdlp, rss, shell, eval, users_settings, bot_settings
 
+import bypasser
+import freewall
 
 async def stats(client, message):
     if await aiopath.exists('.git'):
