@@ -221,7 +221,19 @@ async def bypass(client, message):
     if len(urls) == 0:
         return
 
-    msg = None
+    if bypasser.ispresent(bypasser.ddl.ddllist,urls[0]):
+        msg = app.send_message(message.chat.id, "⚡ __generating...__", reply_to_message_id=message.id)
+    elif freewall.pass_paywall(urls[0], check=True):
+        msg = app.send_message(message.chat.id, "🕴️ __jumping the wall...__", reply_to_message_id=message.id)
+    else:
+        if "https://olamovies" in urls[0] or "https://psa.wf/" in urls[0]:
+            msg = app.send_message(message.chat.id, "⏳ __this might take some time...__", reply_to_message_id=message.id)
+        else:
+            msg = app.send_message(message.chat.id, "🔎 __bypassing...__", reply_to_message_id=message.id)
+
+    strt = time()
+    links = ""
+    temp = None
 
     for ele in urls:
         if search(r"https?:\/\/(?:[\w.-]+)?\.\w+\/\d+:", ele):
