@@ -194,24 +194,25 @@ async def gyanilinks(url: str) -> str:
         raise DDLException("Link Extraction Failed")
 
 
-async def ouo(url: str): 
-    tempurl = url.replace("ouo.press", "ouo.io") 
+# code from https://github.com/xcscxr/ouo-bypass/
+def ouo(url):
+    tempurl = url.replace("ouo.press", "ouo.io")
     p = urlparse(tempurl)
     id = tempurl.split('/')[-1]
-    client = cSession(headers={'authority': 'ouo.io', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8', 'cache-control': 'max-age=0', 'referer': 'http://www.google.com/ig/adde?moduleurl=', 'upgrade-insecure-requests': '1'}) 
-    res = client.get(tempurl, impersonate="chrome110") 
-    next_url = f"{p.scheme}://{p.hostname}/go/{id}" 
-  
-    for _ in range(2): 
-        if res.headers.get('Location'): 
-            break 
-        bs4 = BeautifulSoup(res.content, 'lxml') 
-        inputs = bs4.form.findAll("input", {"name": compile(r"token$")}) 
-        data = { inp.get('name'): inp.get('value') for inp in inputs } 
-        data['x-token'] = await recaptchaV3()
-        res = client.post(next_url, data=data, headers= {'content-type': 'application/x-www-form-urlencoded'}, allow_redirects=False, impersonate="chrome110") 
-        next_url = f"{p.scheme}://{p.hostname}/xreallcygo/{id}" 
-  
+    client = Nreq.Session(headers={'authority': 'ouo.io', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8', 'cache-control': 'max-age=0', 'referer': 'http://www.google.com/ig/adde?moduleurl=', 'upgrade-insecure-requests': '1'})
+    res = client.get(tempurl, impersonate="chrome110")
+    next_url = f"{p.scheme}://{p.hostname}/go/{id}"
+
+    for _ in range(2):
+        if res.headers.get('Location'): break
+        bs4 = BeautifulSoup(res.content, 'lxml')
+        inputs = bs4.form.findAll("input", {"name": re.compile(r"token$")})
+        data = { input.get('name'): input.get('value') for input in inputs }
+        data['x-token'] = RecaptchaV3()
+        header = {'content-type': 'application/x-www-form-urlencoded'}
+        res = client.post(next_url, data=data, headers=header,allow_redirects=False, impersonate="chrome110")
+        next_url = f"{p.scheme}://{p.hostname}/xreallcygo/{id}"
+
     return  res.headers.get('Location')
 
 
