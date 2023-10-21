@@ -8,7 +8,7 @@ from psutil import disk_usage, cpu_percent, swap_memory, cpu_count, virtual_memo
 from time import time
 from sys import executable
 from pyrogram.handlers import MessageHandler
-from pyrogram.filters import command
+from pyrogram.filters import command, private, user
 from asyncio import create_task, create_subprocess_exec, gather
 from re import match
 
