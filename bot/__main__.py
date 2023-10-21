@@ -49,7 +49,7 @@ async def stats(client, message):
             f'<b>🥡 Memory Total:</b> {get_readable_file_size(memory.total)}\n'\
             f'<b>🥡 Memory Free:</b> {get_readable_file_size(memory.available)}\n'\
             f'<b>🥡 Memory Used:</b> {get_readable_file_size(memory.used)}\n'
-    await sendMessage(message, stats, )
+    await sendMessage(message, stats)
 
 
 async def start(client, message):
