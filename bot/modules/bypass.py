@@ -6,7 +6,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQue
 from pyrogram.enums import MessageEntityType
 from pyrogram.errors import QueryIdInvalid
 
-from bot import Bypass, BOT_START, LOGGER
+from bot import LOGGER
 from bot.core.bypass_checker import direct_link_checker, is_excep_link
 from bot.core.bot_utils import convert_time
 from bot.core.exceptions import DDLException
@@ -14,7 +14,7 @@ from bot.core.exceptions import DDLException
 
 # Handler for the "/bp" command
 #@app.on_message(filters.command("bp", prefixes="/"))
-async def bypass(client, message):
+async def bypass(self, message):
     uasync def bypass_check(client, message):
     uid = message.from_user.id
     if (reply_to := message.reply_to_message) and (reply_to.text is not None or reply_to.caption is not None):
@@ -82,5 +82,5 @@ async def bypass(client, message):
     else:
         await wait_msg.delete()
 
-bot.add_handler(MessageHandler(Bypass, filters=command(
+bot.add_handler(MessageHandler(bypass, filters=command(
     BotCommands.BypassCommand) & CustomFilters.authorized))
