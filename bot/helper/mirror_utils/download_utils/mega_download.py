@@ -10,7 +10,7 @@ from bot.helper.ext_utils.bot_utils import get_mega_link_type, async_to_sync, sy
 from bot.helper.mirror_utils.status_utils.mega_download_status import MegaDownloadStatus
 from bot.helper.mirror_utils.status_utils.queue_status import QueueStatus
 from bot.helper.ext_utils.task_manager import is_queued
-from bot.helper.ext_utils.atrocious_utils import check_filename, limit_checker, stop_duplicate_check
+from bot.helper.ext_utils.aya_utils import check_filename, limit_checker, stop_duplicate_check
 
 
 class MegaAppListener(MegaListener):

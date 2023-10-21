@@ -12,7 +12,7 @@ from pyrogram.filters import command
 from asyncio import create_subprocess_exec, gather
 
 from bot import bot, botStartTime, LOGGER, Interval, DATABASE_URL, QbInterval, INCOMPLETE_TASK_NOTIFIER, scheduler, user_data
-from bot.helper.ext_utils.atrocious_utils import set_commands
+from bot.helper.ext_utils.aya_utils import set_commands
 from .helper.ext_utils.fs_utils import start_cleanup, clean_all, exit_clean_up
 from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time, cmd_exec, sync_to_async
 from .helper.ext_utils.db_handler import DbManger
@@ -49,10 +49,7 @@ async def stats(client, message):
             f'<b>🥡 Memory Total:</b> {get_readable_file_size(memory.total)}\n'\
             f'<b>🥡 Memory Free:</b> {get_readable_file_size(memory.available)}\n'\
             f'<b>🥡 Memory Used:</b> {get_readable_file_size(memory.used)}\n'
-            buttons = ButtonMaker()
-            buttons.ibutton("🎓 Owner", "t.me/Eritsuu") 
-            buttons.ibutton("👋 Donate", "https://link.dana.id/qr/3vbyw7nu") 
-    await sendMessage(message, stats, buttons=buttons.build_menu(3))
+    await sendMessage(message, stats)
 
 
 async def start(client, message):
@@ -103,11 +100,8 @@ async def ping(_, message):
     await editMessage(reply, f'🏓Pong {end_time - start_time} ms')
 
 
-async def log(client, message):
-    buttons = ButtonMaker()
-    buttons.ibutton(('LOG_DISPLAY_BT'), f' {message.from_user.id} logdisplay')
-    buttons.ibutton(('WEB_PASTE_BT'), f' {message.from_user.id} webpaste')
-    await sendFile(message, 'log.txt', buttons=buttons.build_menu(1))
+async def log(_, message):
+    await sendFile(message, 'log.txt')
     
     ##logFileRead = open('log.txt', 'r')
     ##logFileLines = logFileRead.read().splitlines()
@@ -199,11 +193,11 @@ async def restart_notification():
 
     if await aiopath.isfile(".restartmsg"):
         try:
-            await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text='Restarted Successfully!')
+            await bot.edit_message_text(chat_id=chat_id, message_id=msg_id, text='🎉 Memulai Ulang Berhasil!')
         except:
             pass
         await aioremove(".restartmsg")
-
+        
 
 async def main():
     await gather(start_cleanup(), torrent_search.initiate_search_tools(), restart_notification(), set_commands(bot))

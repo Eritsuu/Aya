@@ -10,7 +10,7 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.message_utils import editMessage, sendMessage, deleteMessage, auto_delete_message, sendStatusMessage, update_all_messages, delete_all_messages
 from bot.helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time, turn_page, setInterval, new_task
-from bot.helper.ext_utils.atrocious_utils import user_info
+from bot.helper.ext_utils.aya_utils import user_info
 
 
 @new_task

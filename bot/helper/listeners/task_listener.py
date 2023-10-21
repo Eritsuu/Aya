@@ -28,7 +28,7 @@ from bot.helper.mirror_utils.rclone_utils.transfer import RcloneTransferHelper
 from bot.helper.telegram_helper.message_utils import sendMessage, delete_all_messages, update_all_messages
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.ext_utils.db_handler import DbManger
-from bot.helper.ext_utils.atrocious_utils import check_duplicate_file, get_bot_pm_button, send_to_chat
+from bot.helper.ext_utils.aya_utils import check_duplicate_file, get_bot_pm_button, send_to_chat
 
 
 class MirrorLeechListener:
