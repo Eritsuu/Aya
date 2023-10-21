@@ -36,3 +36,7 @@ tgcrypto
 uvloop
 xattr
 yt-dlp
+curl-cffi
+urllib3==1.26
+bs4
+cfscrape
