@@ -15,7 +15,7 @@ from curl_cffi.requests import Session as cSession
 from lxml import etree
 from requests import Session, get as rget
 
-from bot import Config, LOGGER
+from bot import LOGGER
 from bot.core.exceptions import DDLException
 from bot.core.recaptcha import recaptchaV3
 
