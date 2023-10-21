@@ -316,7 +316,7 @@ async def docthread(message):
     file = await downloadMedia(message)
     dlccont = open(file, "r").read()
     links = bypasser.getlinks(dlccont)
-    await edit_message_text(message.chat.id, msg.message_id, f'__{links}__', disable_web_page_preview=True)
+    await editMessage(message.chat.id, msg.message_id, f'__{links}__', disable_web_page_preview=True)
     remove(file)
 
 
